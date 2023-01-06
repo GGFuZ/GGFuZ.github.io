@@ -14,12 +14,11 @@ const slider = tns({
             navAsTrambnails: true,
             autoHeight: true,
         },
-        1024: {
+        1025: {
             nav: false,
             autoHeight: false,
         },
     },
-
   });
 
 document.querySelector('.prev').onclick = function () {
@@ -66,9 +65,24 @@ $(document).ready(function(){
         });
     });
 
-    $('.feed-form').validate();
 
-    // $('#consultation form').validate();
-    // $('#order form').validate();
-    // $('.consul form').validate();
+    $('.consul form').validate();
+    $('#order form').validate();
+    $('#consultation form').validate({
+        rules: {
+            name: "required",
+            phone: "required",
+            email: {
+                required: true,
+                email: true,
+            }
+        },
+        messages: {
+            name: "Please specify your name",
+            email: {
+              required: "We need your email address to contact you",
+              email: "Your email address must be in the format of name@domain.com"
+            }
+          }
+    });
   });
