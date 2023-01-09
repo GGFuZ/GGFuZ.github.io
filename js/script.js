@@ -65,24 +65,55 @@ $(document).ready(function(){
         });
     });
 
+    function validateForms(form){
+        $(form).validate({
+            rules: {
+                name: {
+                    required: true,
+                    minlength: 2
+                  },
+                phone: "required",
+                email: {
+                    required: true,
+                    email: true,
+                }
+            },
+            messages: {
+                name: {
+                    required: "Пожалуйста, введите свое имя",
+                    minlength: jQuery.validator.format("Минимальное количество символов {0}")
+                  },
+                phone: "Пожалуйста, введите свой номер телефона",
+                email: {
+                  required: "Пожалуйста, введите свою почту",
+                  email: "Почта должна быть в формате name@domain.com"
+                }
+              }
+        });
+    };
 
-    $('.consul form').validate();
-    $('#order form').validate();
-    $('#consultation form').validate({
-        rules: {
-            name: "required",
-            phone: "required",
-            email: {
-                required: true,
-                email: true,
-            }
-        },
-        messages: {
-            name: "Please specify your name",
-            email: {
-              required: "We need your email address to contact you",
-              email: "Your email address must be in the format of name@domain.com"
-            }
-          }
+    validateForms('#consultation form');
+    validateForms('#order form');
+    validateForms('.consul form');
+
+    $('input[name=phone]').mask('+38(999) 999-99-99');
+
+    $('form').submit(function(e) {
+        e.preventDefault();
+
+        if (!$(this).valid()){
+            return;
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "mailer/smart.php",
+            data: $(this).serialize()
+        }).done(function() {
+            $(this).find("input").val("");
+
+            $('form').trigger('reset');
+        });
+        return false;
     });
   });
